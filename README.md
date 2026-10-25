@@ -1,4 +1,4 @@
-**# Smart Traffic Analytics
+Smart Traffic Analytics
 
 A Python-based traffic data processing project that uses MapReduce-style processing to aggregate vehicle pickup records by hour.
 
