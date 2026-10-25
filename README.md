@@ -81,9 +81,3 @@ Expected output:
 - Visualize hourly traffic patterns.
 - Improve processing efficiency for large datasets.
 
-## Author
-
-Ayesha Maniyar
-
-GitHub: [ayeshamaniyar26](https://github.com/ayeshamaniyar26)
-**
