@@ -10,3 +10,5 @@ __pycache__/
 .env
 .env.*
 !.env.example
+mapreduce/mapper_original.py
+mapreduce/reducer_original.py
