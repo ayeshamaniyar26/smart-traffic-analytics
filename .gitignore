@@ -1,0 +1,12 @@
+hourly_input.txt
+hourly_counts.txt
+hourly_results.csv
+hourly_results.csvhdfs
+traffic-venv/
+venv/
+.venv/
+__pycache__/
+*.pyc
+.env
+.env.*
+!.env.example
