@@ -1,64 +1,139 @@
-Smart Traffic Analytics
+# Smart Traffic Analytics – NYC Taxi Demand Intelligence
 
-A Python-based traffic data processing project that uses MapReduce-style processing to aggregate vehicle pickup records by hour.
+**Smart Traffic Analytics** is a Python-based Big Data project that analyzes historical NYC Yellow Taxi trip records to identify hourly demand patterns, busy periods, popular pickup and drop-off locations, and passenger trends.
 
-## Overview
+The project uses **Hadoop HDFS and MapReduce** for large-scale data processing and **Streamlit** to present the results through an interactive analytics dashboard.
 
-This project processes Yellow Taxi trip data stored in Parquet files. The preparation script extracts pickup timestamps and writes them to a text file. Mapper and reducer scripts demonstrate how records can be transformed and aggregated into hourly counts.
+🌐 **Live Dashboard:** [Smart Traffic Analytics](https://smart-trafficanalytics.streamlit.app/)
 
-## Technologies
+## Problem Statement
+
+Urban transportation generates large volumes of trip data every day. Analyzing this data manually makes it difficult to identify demand patterns, peak travel hours, high-demand pickup locations, and changes in passenger activity.
+
+This project addresses the challenge by processing large-scale NYC Yellow Taxi trip data and transforming it into meaningful insights. It helps users understand when and where taxi demand is highest through data processing, aggregation, visualization, and interactive filtering.
+
+## About the Project
+
+Smart Traffic Analytics focuses on analyzing historical taxi demand rather than monitoring live road congestion or tracking vehicles in real time.
+
+The project processes Yellow Taxi trip records stored in Parquet files, extracts relevant information, performs hourly aggregation using MapReduce, and generates analytical datasets for visualization.
+
+The Streamlit dashboard allows users to explore demand patterns, compare trends, examine location-based insights, and understand key findings from the dataset.
+
+## Dataset Used
+
+- **Dataset:** NYC Yellow Taxi Trip Records
+- **Source:** [NYC Taxi & Limousine Commission – Trip Record Data](https://www.nyc.gov/site/tlc/about/tlc-trip-record-data.page)
+- **Time Period:** January 2024 – December 2025
+- **Number of Files:** 24 monthly Parquet files
+- **Total Dataset Size:** Approximately 1.5 GB
+- **Format:** Parquet
+
+The dataset contains information such as pickup and drop-off timestamps, pickup and drop-off location IDs, passenger counts, trip distances, fares, payment types, and other trip-related details.
+
+## Key Features
+
+- **Hourly Demand Analysis:** Identifies busy and quiet hours based on taxi pickup records.
+- **Pickup and Drop-off Analysis:** Highlights locations with high taxi demand.
+- **Monthly and Yearly Trends:** Explores changes in taxi demand over time.
+- **Payment and Passenger Insights:** Analyzes payment methods and passenger patterns.
+- **Interactive Filters:** Allows users to filter data by year, month, hour, and weekday.
+- **Trend Comparison:** Compares demand across selected time periods.
+- **Forecasting and Anomaly Analysis:** Explores potential demand trends and unusual patterns.
+- **Data Quality Analysis:** Provides insights into the quality and consistency of the processed data.
+- **Interactive Dashboard:** Presents analytical results through charts, KPIs, visualizations, and downloadable datasets.
+
+## Technologies Used
 
 - Python 3
-- PyArrow for Parquet processing
-- MapReduce programming concepts
+- Pandas
+- PyArrow
+- Hadoop 3.5.0
+- Hadoop Distributed File System (HDFS)
+- Hadoop Streaming / MapReduce
+- Streamlit
+- Plotly
 - Linux / Ubuntu (WSL)
 
 ## Project Structure
 
 ```text
 smart-traffic-analytics/
+│
+├── analytics/
+│   └── generate_analytics.py
+│
 ├── mapreduce/
 │   ├── prepare_data.py
 │   ├── mapper.py
 │   └── reducer.py
+│
+├── data/
+│   ├── hourly_trips.csv
+│   ├── monthly_summary.csv
+│   ├── pickup_zones.csv
+│   ├── dropoff_zones.csv
+│   └── other analytical CSV files
+│
 ├── tests/
 │   ├── sample_input.txt
 │   ├── test_mapper.py
 │   └── test_reducer.py
+│
+├── app.py
+├── requirements.txt
 ├── .gitignore
 └── README.md
 ```
 
-## Workflow
+## Project Workflow
 
-1. **Data preparation:** `prepare_data.py` reads the pickup timestamp column from 24 Parquet files and writes timestamps to `hourly_input.txt`.
-2. **Mapping:** The mapper converts each timestamp into an hour key and emits a count of 1.
-3. **Sorting:** Mapper output is sorted by key.
-4. **Reduction:** The reducer aggregates counts for each hour.
+1. **Data Collection:** Download the 24 monthly NYC Yellow Taxi Parquet files.
+2. **Data Preparation:** Use Python and PyArrow to extract relevant trip information and prepare records for processing.
+3. **HDFS Storage:** Store the prepared dataset in Hadoop Distributed File System (HDFS).
+4. **Mapping:** The mapper extracts the hour from each pickup timestamp and emits an hourly key with a count of 1.
+5. **Sorting:** Mapper output is sorted by key.
+6. **Reduction:** The reducer aggregates the counts to calculate the total number of pickups for each hour.
+7. **Analytics Generation:** Python and Pandas generate additional analytical CSV datasets from the source Parquet files.
+8. **Visualization:** Streamlit and Plotly present the processed data through an interactive dashboard.
 
-The reusable sample scripts in `tests/` demonstrate the timestamp-to-hour aggregation workflow independently of the original scripts.
+## Running the Project
 
-## Prerequisites
+### Prerequisites
 
 - Python 3
-- PyArrow (`python3 -m pip install pyarrow`)
-- The expected Yellow Taxi Parquet files in your home directory, named `yellow_tripdata_*.parquet`
+- Java
+- Hadoop 3.5.0
+- PyArrow
+- Pandas
+- Streamlit
+- Plotly
 
-## Running the Preparation Script
+### Install Dependencies
 
-From the repository root:
+From the project directory, activate your virtual environment and install the required packages:
+
+```bash
+pip install -r requirements.txt
+```
+
+### Run the Dashboard
+
+```bash
+streamlit run app.py
+```
+
+The dashboard will open in your browser.
+
+### Run the Data Preparation Script
 
 ```bash
 python3 mapreduce/prepare_data.py
 ```
 
-The script expects exactly 24 matching Parquet files in your home directory and writes `hourly_input.txt` under `~/smart-traffic/`.
+The preparation script expects the 24 Yellow Taxi Parquet files in the configured source directory.
 
-**Note:** The preparation script processes the source files and writes the output file. Ensure the expected data is available before running it.
-
-## Testing the Sample Pipeline
-
-Run the sample mapper and reducer:
+### Run the Sample MapReduce Pipeline
 
 ```bash
 python3 tests/test_mapper.py < tests/sample_input.txt \
@@ -66,18 +141,12 @@ python3 tests/test_mapper.py < tests/sample_input.txt \
   | python3 tests/test_reducer.py
 ```
 
-Expected output:
+## Live Application
 
-```text
-08    3
-09    2
-10    1
-```
+Explore the interactive dashboard:
 
-## Future Improvements
+[**https://smart-trafficanalytics.streamlit.app/**](https://smart-trafficanalytics.streamlit.app/)
 
-- Integrate the preparation output directly with the MapReduce processing pipeline.
-- Add validation and automated tests.
-- Visualize hourly traffic patterns.
-- Improve processing efficiency for large datasets.
+---
 
+**Smart Traffic Analytics | Developed by Ayesha Maniyar | KLE Technological University | Python, Hadoop, Pandas, Plotly & Streamlit**

@@ -796,7 +796,7 @@ def tab_overview():
     st.divider()
 
     # Story mode
-    section_title("Story Mode", "A plain-language reading of the current view.")
+    section_title("Journey Through Data", "Discover the patterns, trends, and insights hidden in NYC taxi data")
     s1 = (f"For {scope_text()}, the data records {number(total_trips)} yellow-taxi trips, "
           f"with an average fare of ${K['fare']:.2f} over {K['dist']:.2f} miles per trip.")
     s2 = (f"Demand is highest around {peak_hour_text} and {busy_day} is the busiest day, "
